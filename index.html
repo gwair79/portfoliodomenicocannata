@@ -6,51 +6,41 @@
   <!-- Base NECESSARIA per GitHub Pages -->
   <base href="/portfoliodomenicocannata/">
 
-  <!-- Viewport: zoom fino a 10x + notch safe area -->
+  <!-- Viewport mobile con zoom fino a 10x -->
   <meta name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes, viewport-fit=cover">
 
-  <!-- iOS: esperienza tipo app quando aggiunta alla Home -->
+  <!-- iOS esperienza web-app -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- Android/Chrome: barra scura -->
+  <!-- Android/Chrome -->
   <meta name="theme-color" content="#000000">
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-  <!-- FULLSCREEN / LAYOUT -->
+  <!-- CSS base full screen -->
   <style>
-    :root {
-      /* fallback dinamico per iOS */
-      --vh: 1vh;
-    }
     html, body {
-      margin: 0; padding: 0; height: 100%;
-      background: black; overflow: hidden;
-      color-scheme: dark;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: black;
+      overflow: hidden;
     }
-    /* usa i nuovi viewport units se disponibili */
     #stageArea {
       width: 100vw;
-      height: 100svh; /* small viewport height su mobile moderni */
-      height: calc(var(--vh) * 100); /* fallback per iOS vecchi */
+      height: 100vh;
     }
-
-    /* Pulsante Fullscreen */
     #fsBtn {
-      position: fixed; right: 12px; bottom: 12px; z-index: 9999;
-      padding: 10px 14px; border: 1px solid #444; border-radius: 10px;
-      background: rgba(20,20,20,.85); color: #fff; font: 14px/1.2 system-ui, -apple-system, Arial, sans-serif;
-      backdrop-filter: blur(6px);
-    }
-    #fsHint {
-      position: fixed; left: 12px; bottom: 12px; z-index: 9998;
-      color: #bbb; font: 12px/1.2 system-ui, -apple-system, Arial, sans-serif;
-      background: rgba(0,0,0,.4); padding: 6px 8px; border-radius: 8px;
-    }
-    @media (orientation: landscape) {
-      #fsHint { display: none; }
+      position: fixed;
+      right: 10px; bottom: 10px;
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.6);
+      color: #fff; border: 1px solid #444;
+      border-radius: 6px; font-size: 14px;
+      z-index: 9999;
     }
   </style>
 </head>
@@ -59,7 +49,6 @@
     <div id="stage" class="stage"></div>
     <div id="hyperlinkPlane" class="stage"></div>
   </div>
-
   <div id="slideshowNavigator"></div>
   <div id="slideNumberControl"></div>
   <div id="slideNumberDisplay"></div>
@@ -69,7 +58,7 @@
   <!-- Player Keynote -->
   <script src="assets/player/main.js"></script>
 
-  <!-- Forza viewport contro eventuali override del player -->
+  <!-- Forza viewport (il player a volte lo sovrascrive) -->
   <script>
     (function enforceViewport() {
       const CONTENT = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes, viewport-fit=cover';
@@ -79,50 +68,32 @@
         m.setAttribute('content', CONTENT);
       }
       setVP();
-      // Ritenta più volte in caso di override asincroni
-      [300, 1000, 2000, 4000].forEach(t => setTimeout(setVP, t));
-
-      // Osserva cambiamenti al head e ripristina
-      const obs = new MutationObserver(() => setVP());
-      obs.observe(document.head, {childList:true, subtree:true, attributes:true});
+      [300,1000,2000].forEach(t=>setTimeout(setVP,t));
     })();
   </script>
 
-  <!-- Adatta lo stage a schermo/rotazione (compat iOS) -->
+  <!-- Adatta stage a schermo -->
   <script>
-    function setVhVar(){
-      // iOS calcola male 100vh con barra: usiamo innerHeight
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
     function resizeStage(){
       const el = document.getElementById('stageArea');
       if(!el) return;
       el.style.width  = window.innerWidth + 'px';
-      el.style.height = Math.max(window.innerHeight, el.clientHeight) + 'px';
+      el.style.height = window.innerHeight + 'px';
     }
-    window.addEventListener('load',  () => { setVhVar(); resizeStage(); });
-    window.addEventListener('resize', () => { setVhVar(); resizeStage(); });
-    window.addEventListener('orientationchange', () => { setVhVar(); resizeStage(); });
+    window.addEventListener('load', resizeStage);
+    window.addEventListener('resize', resizeStage);
+    window.addEventListener('orientationchange', resizeStage);
   </script>
 
-  <!-- Pulsante Fullscreen (richiede TAP dell’utente) -->
-  <button id="fsBtn" aria-label="Fullscreen">⤢ Fullscreen</button>
-  <div id="fsHint">Suggerimento: aggiungi alla Home su iPhone per schermo pieno senza barra.</div>
+  <!-- Bottone Fullscreen -->
+  <button id="fsBtn">⤢ Fullscreen</button>
   <script>
-    (function(){
-      const btn = document.getElementById('fsBtn');
-      async function goFS(){
-        const docEl = document.documentElement;
-        try {
-          if (docEl.requestFullscreen) await docEl.requestFullscreen();
-          else if (docEl.webkitRequestFullscreen) await docEl.webkitRequestFullscreen(); // iOS vecchi
-        } catch(e) { /* ignoriamo errori se non supportato */ }
-        // Riadatta dopo l’entrata in fullscreen
-        setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 100);
-      }
-      btn.addEventListener('click', goFS);
-    })();
+    document.getElementById('fsBtn').addEventListener('click', async () => {
+      const el = document.documentElement;
+      if (el.requestFullscreen) await el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+      setTimeout(resizeStage,200);
+    });
   </script>
 </body>
 </html>
