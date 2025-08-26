@@ -9,8 +9,30 @@
   <!-- Viewport con zoom abilitato fino a 10x -->
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes">
 
+  <!-- iOS fullscreen web app (se aggiunto alla Home) -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Android/Chrome: barra scura -->
+  <meta name="theme-color" content="#000000">
+
   <!-- Meta originale mantenuto -->
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+  <!-- FULLSCREEN CSS -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+    }
+    #stageArea {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
 </head>
 <body id="body" bgcolor="black">
   <div id="stageArea">
@@ -26,7 +48,7 @@
   <!-- Player Keynote -->
   <script src="assets/player/main.js"></script>
 
-  <!-- Script che forza il viewport per garantire lo zoom -->
+  <!-- Forza viewport (il player a volte lo sovrascrive) -->
   <script>
     (function enforceViewport() {
       function setVP() {
@@ -39,34 +61,22 @@
         m.setAttribute('content','width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes');
       }
       setVP();
-      // Ripeti più volte nel caso il player lo sovrascriva
       setTimeout(setVP, 300);
       setTimeout(setVP, 1000);
     })();
   </script>
+
+  <!-- Adatta lo stage a schermo/rotazione -->
+  <script>
+    function resizeStage() {
+      var el = document.getElementById('stageArea');
+      if (!el) return;
+      el.style.width  = window.innerWidth + 'px';
+      el.style.height = window.innerHeight + 'px';
+    }
+    window.addEventListener('load', resizeStage);
+    window.addEventListener('resize', resizeStage);
+    window.addEventListener('orientationchange', resizeStage);
+  </script>
 </body>
 </html>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-    background: black;
-  }
-  #stageArea {
-    width: 100vw;
-    <script>
-  function resizeStage() {
-    document.getElementById('stageArea').style.width = window.innerWidth + 'px';
-    document.getElementById('stageArea').style.height = window.innerHeight + 'px';
-  }
-  window.addEventListener('load', resizeStage);
-  window.addEventListener('resize', resizeStage);
-  window.addEventListener('orientationchange', resizeStage);
-</script>
-
-    height: 100vh;
-  }
-</style>
-
