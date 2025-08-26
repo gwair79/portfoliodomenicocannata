@@ -1,24 +1,48 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="UTF-8">
-    <title>Keynote</title>
-    <base href="/portfoliodomenicocannata/">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes">
-  </head>
-  <body id="body" bgcolor="black">
-    <div id="stageArea">
-      <div id="stage" class="stage"></div>
-      <div id="hyperlinkPlane" class="stage"></div>
-    </div>
-    <div id="slideshowNavigator"></div>
-    <div id="slideNumberControl"></div>
-    <div id="slideNumberDisplay"></div>
-    <div id="helpPlacard"></div>
-    <div id="waitingIndicator"><div id="waitingSpinner"></div></div>
+<head>
+  <title>Keynote</title>
 
-    <!-- Lascia questo percorso relativo: col <base> punterà alla repo corretta -->
-    <script src="assets/player/main.js"></script>
-  </body>
+  <!-- Base NECESSARIA per GitHub Pages -->
+  <base href="/portfoliodomenicocannata/">
+
+  <!-- Viewport con zoom abilitato fino a 10x -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes">
+
+  <!-- Meta originale mantenuto -->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body id="body" bgcolor="black">
+  <div id="stageArea">
+    <div id="stage" class="stage"></div>
+    <div id="hyperlinkPlane" class="stage"></div>
+  </div>
+  <div id="slideshowNavigator"></div>
+  <div id="slideNumberControl"></div>
+  <div id="slideNumberDisplay"></div>
+  <div id="helpPlacard"></div>
+  <div id="waitingIndicator"><div id="waitingSpinner"></div></div>
+
+  <!-- Player Keynote -->
+  <script src="assets/player/main.js"></script>
+
+  <!-- Script che forza il viewport per garantire lo zoom -->
+  <script>
+    (function enforceViewport() {
+      function setVP() {
+        var m = document.querySelector('meta[name="viewport"]');
+        if (!m) {
+          m = document.createElement('meta');
+          m.setAttribute('name','viewport');
+          document.head.appendChild(m);
+        }
+        m.setAttribute('content','width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes');
+      }
+      setVP();
+      // Ripeti più volte nel caso il player lo sovrascriva
+      setTimeout(setVP, 300);
+      setTimeout(setVP, 1000);
+    })();
+  </script>
+</body>
 </html>
