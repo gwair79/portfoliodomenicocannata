@@ -56,6 +56,16 @@
   }
   #stageArea {
     width: 100vw;
+    <script>
+  function resizeStage() {
+    document.getElementById('stageArea').style.width = window.innerWidth + 'px';
+    document.getElementById('stageArea').style.height = window.innerHeight + 'px';
+  }
+  window.addEventListener('load', resizeStage);
+  window.addEventListener('resize', resizeStage);
+  window.addEventListener('orientationchange', resizeStage);
+</script>
+
     height: 100vh;
   }
 </style>
